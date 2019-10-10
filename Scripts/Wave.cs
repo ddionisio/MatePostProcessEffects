@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace M8.PostProcessEffects {
@@ -12,33 +10,39 @@ namespace M8.PostProcessEffects {
         public Vector2Parameter amplitude = new Vector2Parameter();
 
         [Tooltip("Speed of the wave in X/Y.")]
-        public Vector2Parameter speed = new Vector2Parameter();
+        public Vector2ConstantParameter speed = new Vector2ConstantParameter();
 
         [Tooltip("Scale of the wave. Higher values allow more waves to fit on screen.")]
-        public Vector2Parameter range = new Vector2Parameter();
+        public Vector2ConstantParameter range = new Vector2ConstantParameter();
     }
 
     public class WaveRenderer : PostProcessEffectRenderer<Wave> {
 
         private const float INV_2PI = 1f / (2f * Mathf.PI);
 
+        private Shader mShader;
+
         private int mParmID;
-        private int mSpeedID;
+        private int mOfsID;
 
         public override void Init() {
+            mShader = Shader.Find("Hidden/M8/PostProcessEffects/Wave");
+
             mParmID = Shader.PropertyToID("parms");
-            mSpeedID = Shader.PropertyToID("speed");
+            mOfsID = Shader.PropertyToID("ofs");
         }
 
         public override void Render(PostProcessRenderContext context) {            
-            var sheet = context.propertySheets.Get(Shader.Find("Hidden/M8/PostProcessEffects/Wave"));
+            var sheet = context.propertySheets.Get(mShader);
                         
             sheet.properties.SetVector(mParmID, 
                 new Vector4(
                     settings.amplitude.value.x * INV_2PI, settings.amplitude.value.y * INV_2PI, 
                     settings.range.value.x, settings.range.value.y));
 
-            sheet.properties.SetVector(mSpeedID, settings.speed);
+            var ofs = settings.speed.value * Time.time;
+
+            sheet.properties.SetVector(mOfsID, ofs);
 
             context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
         }

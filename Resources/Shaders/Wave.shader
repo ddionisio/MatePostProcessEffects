@@ -6,13 +6,13 @@
 		TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
 
 		float4 parms; // x,y = amplitude; z,w = range
-		float2 speed;
+		float2 ofs;
 
 		float4 Frag(VaryingsDefault i) : SV_Target
 		{
 			float2 pos = float2(
-				i.texcoord.x + sin(i.texcoord.y * parms.z + speed.x * _Time.y) * parms.x,
-				i.texcoord.y + sin(i.texcoord.x * parms.w + speed.y * _Time.y) * parms.y);
+				i.texcoord.x + sin(i.texcoord.y * parms.z + ofs.x) * parms.x,
+				i.texcoord.y + sin(i.texcoord.x * parms.w + ofs.y) * parms.y);
 
 			float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, pos);
 
