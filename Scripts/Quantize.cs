@@ -6,7 +6,7 @@ namespace M8.PostProcessEffects {
     [PostProcess(typeof(QuantizeRenderer), PostProcessEvent.AfterStack, "M8/Quantize")]
     public class Quantize : PostProcessEffectSettings {
         [Range(0f, 1f)]
-        public FloatParameter blend = new FloatParameter();
+        public FloatParameter blend = new FloatParameter() { value = 1f };
 
         public IntConstantParameter levels = new IntConstantParameter { value = 16 };
     }

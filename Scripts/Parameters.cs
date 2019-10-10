@@ -47,4 +47,14 @@ namespace M8.PostProcessEffects {
         public static implicit operator Vector2(Vector4ConstantParameter prop) { return prop.value; }
         public static implicit operator Vector3(Vector4ConstantParameter prop) { return prop.value; }
     }
+
+    [System.Serializable]
+    public class Texture2DConstantParameter : ParameterOverride<Texture2D> {
+        public override void Interp(Texture2D from, Texture2D to, float t) {
+            if(from)
+                value = from;
+            else if(to)
+                value = to;
+        }
+    }
 }
