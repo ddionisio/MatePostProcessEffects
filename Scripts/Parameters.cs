@@ -49,6 +49,13 @@ namespace M8.PostProcessEffects {
     }
 
     [System.Serializable]
+    public class ColorConstantParameter : ParameterOverride<Color> {
+        public override void Interp(Color from, Color to, float t) {
+            value = to;
+        }
+    }
+
+    [System.Serializable]
     public class Texture2DConstantParameter : ParameterOverride<Texture2D> {
         public override void Interp(Texture2D from, Texture2D to, float t) {
             if(from)
