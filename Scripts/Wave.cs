@@ -14,6 +14,10 @@ namespace M8.PostProcessEffects {
 
         [Tooltip("Scale of the wave. Higher values allow more waves to fit on screen.")]
         public Vector2ConstantParameter range = new Vector2ConstantParameter();
+
+        public override bool IsEnabledAndSupported(PostProcessRenderContext context) {
+            return enabled.value && amplitude.value != Vector2.zero;
+        }
     }
 
     public class WaveRenderer : PostProcessEffectRenderer<Wave> {

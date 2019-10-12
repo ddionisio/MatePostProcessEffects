@@ -15,7 +15,7 @@
 			return float4(color.r + dither, color.g + dither, color.b + dither, color.a);
 		}
 
-		sampler2D _WeightTex;
+		TEXTURE2D_SAMPLER2D(_WeightTex, sampler_WeightTex);
 
 		float4 FragWeight(VaryingsDefault i) : SV_Target
 		{
@@ -23,7 +23,7 @@
 
 			float colorLumen = dot(color.rgb, float3(0.2126729, 0.7151522, 0.0721750)); //simple grayscale
 
-			float dither = lerp(0, genDither(i.texcoord), tex2D(_WeightTex, float2(colorLumen, 0)).r);
+			float dither = lerp(0, genDither(i.texcoord), SAMPLE_TEXTURE2D(_WeightTex, sampler_WeightTex, float2(colorLumen, 0)).r);
 
 			return float4(color.r + dither, color.g + dither, color.b + dither, color.a);
 		}

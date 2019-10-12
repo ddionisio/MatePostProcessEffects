@@ -8,6 +8,10 @@ namespace M8.PostProcessEffects {
         public Texture2DConstantParameter pattern = new Texture2DConstantParameter();
         public Texture2DConstantParameter weight = new Texture2DConstantParameter();
         public FloatConstantParameter adjust = new FloatConstantParameter();
+
+        public override bool IsEnabledAndSupported(PostProcessRenderContext context) {
+            return enabled.value && pattern.value;
+        }
     }
 
     public class DitherRenderer : PostProcessEffectRenderer<Dither> {
@@ -44,11 +48,10 @@ namespace M8.PostProcessEffects {
             sheet.properties.SetFloat(mAdjustID, settings.adjust);
 
             var patternTex2D = settings.pattern.value;
-            if(patternTex2D) {
-                sheet.properties.SetTexture(mPatternID, patternTex2D);
-                sheet.properties.SetFloat(mStepXID, (float)(context.width / patternTex2D.width));
-                sheet.properties.SetFloat(mStepYID, (float)(context.height / patternTex2D.height));
-            }
+
+            sheet.properties.SetTexture(mPatternID, patternTex2D);
+            sheet.properties.SetFloat(mStepXID, (float)(context.width / patternTex2D.width));
+            sheet.properties.SetFloat(mStepYID, (float)(context.height / patternTex2D.height));
 
             var weightTex2D = settings.weight.value;
             if(weightTex2D) {

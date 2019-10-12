@@ -9,6 +9,10 @@ namespace M8.PostProcessEffects {
         public FloatParameter blend = new FloatParameter() { value = 1f };
 
         public IntConstantParameter levels = new IntConstantParameter { value = 16 };
+
+        public override bool IsEnabledAndSupported(PostProcessRenderContext context) {
+            return enabled.value && blend.value > 0f;
+        }
     }
 
     public class QuantizeRenderer : PostProcessEffectRenderer<Quantize> {
@@ -27,11 +31,19 @@ namespace M8.PostProcessEffects {
 
         public override void Render(PostProcessRenderContext context) {
             var sheet = context.propertySheets.Get(mShader);
-
-            sheet.properties.SetFloat(mBlendID, settings.blend);
+                        
             sheet.properties.SetInt(mLevelsID, settings.levels);
 
-            context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
+            var blendVal = settings.blend.value;
+
+            if(blendVal < 1f) {
+                sheet.properties.SetFloat(mBlendID, blendVal);
+
+                context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
+            }
+            else {
+                context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 1);
+            }
         }
     }
 }

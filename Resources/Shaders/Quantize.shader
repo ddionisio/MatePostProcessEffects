@@ -15,19 +15,36 @@
 			return val / 255.0;
 		}
 
+		float4 FragBlend(VaryingsDefault i) : SV_Target
+		{
+			float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
+
+			float3 qColor = float3(quantize(color.r), quantize(color.g), quantize(color.b));
+
+			return float4(lerp(color.rgb, qColor, blend), color.a);
+		}
+
 		float4 Frag(VaryingsDefault i) : SV_Target
 		{
 			float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
 
 			float3 qColor = float3(quantize(color.r), quantize(color.g), quantize(color.b));
 
-			return float4(lerp(color.rgb, qColor.rgb, blend), color.a);
+			return float4(qColor, color.a);
 		}
 	ENDHLSL
 	
 	SubShader
 	{
 		Cull Off ZWrite Off ZTest Always
+
+		Pass
+		{
+			HLSLPROGRAM
+				#pragma vertex VertDefault
+				#pragma fragment FragBlend
+			ENDHLSL
+		}
 
 		Pass
 		{
