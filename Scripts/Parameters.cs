@@ -64,4 +64,9 @@ namespace M8.PostProcessEffects {
                 value = to;
         }
     }
+
+    [System.Serializable]
+    public class FilterModeParameter : ParameterOverride<FilterMode> {
+
+    }
 }
